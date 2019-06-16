@@ -15,9 +15,10 @@ var humanPlayer;
 var AIPlayer;
 
 function initSetup() {
-    console.log("here");
+    console.log("Build player section");
     for (var i=0; i< characters.length; i++){
-        $("#section-1").append(buildButton(i, characters[i]));
+        var characterButton = buildButton(i, characters[i]);
+        $("#section-1").append(characterButton);
     }
 }
 
