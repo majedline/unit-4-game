@@ -7,33 +7,68 @@
 // color: "play-button-green",
 
 var characters = [obiwan, luke, sith, maul];
+var characterButtons = [];
 
 
 console.log(characters);
 
 var humanPlayer;
-var AIPlayer;
+var aiPlayer;
+
+var isHumanPlayerSelected = false;
+var isAIPlayerSelected = false;
+
+// var isHumanPlayerDead = false;
+
+var isGameActive = true;
 
 function initSetup() {
     console.log("Build player section");
-    for (var i=0; i< characters.length; i++){
+    // create the buttons;
+    for (var i = 0; i < characters.length; i++) {
         var characterButton = buildButton(i, characters[i]);
         $("#section-1").append(characterButton);
+        characterButtons.push(characterButton);
     }
+
+    // setup the play-button events
+    $(".play-button").on("click", function () {
+        executButton(this);
+    });
+
+    // setup the fight event
+    $("#fight").on("click", function () {
+        console.log("fight");
+    });
+
+    
 }
 
-function selectHumanPlayer() {
-    return;
-}
+function executButton(buttonClicked) {
 
-function selectAIPlayer() {
-    return;
+    if (isGameActive) {
+
+        if (!isHumanPlayerSelected) {
+            humanPlayer = characters[buttonClicked.id];
+            console.log("Human Player is:")
+            console.log(humanPlayer);
+            isHumanPlayerSelected = true;
+
+        } else if (!isAIPlayerSelected) {
+            aiPlayer = characters[buttonClicked.id];
+            console.log("AI Player is:")
+            console.log(aiPlayer);
+            isAIPlayerSelected = true;
+        }
+
+    }
 }
 
 
 /* game actions */
 function run() {
     initSetup();
+
 
 }
 
@@ -54,6 +89,7 @@ function attack() {
     return;
 }
 
+
 function buildButton(id, character) {
 
     var playerButton = $("<button>");
@@ -73,7 +109,7 @@ function buildButton(id, character) {
 
     playerButton.append(playerImage);
     playerButton.append(playerText);
-    
+
     return playerButton;
 
 }
