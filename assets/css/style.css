@@ -1,5 +1,6 @@
 body{
     background-image: url("../images/background-main.png");
+    color:white;
 }
 
 .wrapper {
@@ -12,7 +13,7 @@ body{
 }
 
 .wrapper > * {
-    background-color: #ffffcc;
+    background-color: #222222;
     border-radius: 5px;
     padding: 10px;
 
@@ -64,7 +65,7 @@ nav button{
     font-family: fantasy;
     width:50%;
     margin: auto;
-    margin-top: 40px;
+    margin-bottom: 20px;
 }
 
 .content h1{

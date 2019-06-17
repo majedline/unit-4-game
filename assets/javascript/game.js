@@ -12,7 +12,7 @@ var aiPlayer;
 var isHumanPlayerSelected = false;
 var isAIPlayerSelected = false;
 
-// var isHumanPlayerDead = false;
+var readyToFight = false;
 
 var isGameActive = true;
 
@@ -31,7 +31,7 @@ function initSetupSection1() {
 
     // setup the fight event
     $("#fight").on("click", function () {
-        console.log("fight");
+        fight();
     });
 }
 
@@ -54,13 +54,14 @@ function initSetupSection2() {
     $(".play-button").on("click", function () {
         executButtonClick(this);
     });
-}
 
+}
 
 
 
 // the function called by the human and AI button selection
 function executButtonClick(buttonClicked) {
+
 
     if (isGameActive) {
 
@@ -73,7 +74,9 @@ function executButtonClick(buttonClicked) {
             $("#section-1").html(buttonClicked);
             initSetupSection2();
 
-            $("#instructions-1").html("You are: "+humanPlayer.characterName );
+            $("#instructions-1").html("You are: " + humanPlayer.characterName);
+            $("#instructions-2").html("Select who you want to fight");
+
 
 
         } else if (!isAIPlayerSelected) {
@@ -84,11 +87,11 @@ function executButtonClick(buttonClicked) {
 
             $("#section-3").html(buttonClicked);
             $("#instructions-2").html("These are the other enemies to fight");
-            $("#instructions-3").html("You are now fighting: "+aiPlayer.characterName );
+            $("#instructions-3").html("You are now fighting: " + aiPlayer.characterName);
+            readyToFight = true;
+
 
         }
-
-
     }
 }
 
@@ -98,16 +101,66 @@ function run() {
 }
 
 /* player actions */
+function fight() {
+
+    if (readyToFight) {
+        console.log("AI Fighter");
+        console.log(aiPlayer);
+        console.log("Human Fighter");
+        console.log(humanPlayer);
+
+        // Human attack AI
+        aiPlayer.healthPoint -= humanPlayer.currentAttackPoint;
+
+        // AI attacks human
+        humanPlayer.healthPoint -= aiPlayer.counterAttackPoints;
+
+        //Human power increase by baseAttachPoint
+        humanPlayer.currentAttackPoint += humanPlayer.baseAttackPoint;
+
+        // update the interface
+        $("#ptext" + humanPlayer.id).html("HP: " + humanPlayer.healthPoint);
+        $("#ptext" + aiPlayer.id).html("HP: " + aiPlayer.healthPoint);
+
+
+        if (humanPlayer.healthPoint <= 0) {
+            humanPlayer.isAlive = false;
+        }
+
+        if (aiPlayer.healthPoint <= 0) {
+
+            aiPlayer.isAlive = false;
+            readyToFight = false;
+            isAIPlayerSelected = false;
+
+            var msg = aiPlayer.characterName+" is dead. Select the next enemy!";    
+            $("#instructions-3").html(msg);
+            $("#ptext" + aiPlayer.id).html(msg);
+
+        }
+    }
+}
+
+function checkIfThereAreEnemiesRemainingToFight(){
+    var enemiesRemaining =false;
+
+    for (var i=0; i<characters.length; i++){
+        if (characters[i].id != humanPlayer.id){
+            if (characters[i].isAlive){
+                enemiesRemaining = true;
+            }
+        }
+    }
+
+    return enemiesRemaining;
+}
+
+function isPlayerDead(player) {
+
+}
+
 function attack(player1, player2) {
-    return;
-}
 
-function isPlayerDead() {
-    return;
-}
-
-function attack() {
-    return;
 }
 
 function buildButton(id, character) {
@@ -123,6 +176,7 @@ function buildButton(id, character) {
     playerImage.attr("id", character.id);
 
     var playerText = $("<p>");
+    playerText.attr("id", "ptext" + id);
     playerText.html("HP: " + character.healthPoint);
 
     playerButton.append(playerImage);

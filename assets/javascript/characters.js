@@ -4,10 +4,10 @@
 var obiwan = {
     id:0,
     characterName: "Obi-Wan",
-    healthPoint: 120,
+    healthPoint: 620,
     baseAttackPoint: 6,
     currentAttackPoint: 6,
-    counterAttackPoints: 25,
+    counterAttackPoints: 60,
     image: "./assets/images/obiwan.PNG",
     color: "play-button-green",
     isAlive:true,
@@ -16,7 +16,7 @@ var obiwan = {
 
 var luke = {
     id:1,
-    characterName: "luke",
+    characterName: "Luke",
     healthPoint: 100,
     baseAttackPoint: 5,
     currentAttackPoint: 5,
@@ -33,7 +33,7 @@ var sith = {
     healthPoint: 150,
     baseAttackPoint: 8,
     currentAttackPoint: 8,
-    counterAttackPoints: 25,
+    counterAttackPoints: 50,
     image: "./assets/images/sith.PNG",
     color: "play-button-red",
     isAlive:true,
