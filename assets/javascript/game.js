@@ -1,13 +1,7 @@
-// character: "Obi-Wan",
-// healthPoint: 120,
-// baseAttackPoint: 6,
-// currentAttackPoint: 6,
-// counterAttackPoints: 25,
-// image: "../assets/images/obiwan.PNG",
-// color: "play-button-green",
+
 
 var characters = [obiwan, luke, sith, maul];
-var characterButtons = [];
+// var characterButtons = [];
 
 
 console.log(characters);
@@ -22,29 +16,51 @@ var isAIPlayerSelected = false;
 
 var isGameActive = true;
 
-function initSetup() {
+function initSetupSection1() {
     console.log("Build player section");
     // create the buttons;
     for (var i = 0; i < characters.length; i++) {
         var characterButton = buildButton(i, characters[i]);
         $("#section-1").append(characterButton);
-        characterButtons.push(characterButton);
     }
 
     // setup the play-button events
     $(".play-button").on("click", function () {
-        executButton(this);
+        executButtonClick(this);
     });
 
     // setup the fight event
     $("#fight").on("click", function () {
         console.log("fight");
     });
-
-    
 }
 
-function executButton(buttonClicked) {
+function initSetupSection2() {
+    console.log("Build AI section");
+
+    // Setup the human button selection area.
+    for (var i = 0; i < characters.length; i++) {
+        // if it is human player or current AI player, then ignore it
+        if (characters[i] != humanPlayer && characters[i] != aiPlayer) {
+            // if the AI player is still alive, then show it
+            if (characters[i].isAlive) {
+                var characterButton = buildButton(i, characters[i]);
+                $("#section-2").append(characterButton);
+            }
+        }
+    }
+
+    // setup the play-button events
+    $(".play-button").on("click", function () {
+        executButtonClick(this);
+    });
+}
+
+
+
+
+// the function called by the human and AI button selection
+function executButtonClick(buttonClicked) {
 
     if (isGameActive) {
 
@@ -54,22 +70,31 @@ function executButton(buttonClicked) {
             console.log(humanPlayer);
             isHumanPlayerSelected = true;
 
+            $("#section-1").html(buttonClicked);
+            initSetupSection2();
+
+            $("#instructions-1").html("You are: "+humanPlayer.characterName );
+
+
         } else if (!isAIPlayerSelected) {
             aiPlayer = characters[buttonClicked.id];
             console.log("AI Player is:")
             console.log(aiPlayer);
             isAIPlayerSelected = true;
+
+            $("#section-3").html(buttonClicked);
+            $("#instructions-2").html("These are the other enemies to fight");
+            $("#instructions-3").html("You are now fighting: "+aiPlayer.characterName );
+
         }
+
 
     }
 }
 
-
 /* game actions */
 function run() {
-    initSetup();
-
-
+    initSetupSection1();
 }
 
 /* player actions */
@@ -81,14 +106,9 @@ function isPlayerDead() {
     return;
 }
 
-console.log(obiwan);
-
-
-
 function attack() {
     return;
 }
-
 
 function buildButton(id, character) {
 
@@ -103,9 +123,7 @@ function buildButton(id, character) {
     playerImage.attr("id", character.id);
 
     var playerText = $("<p>");
-    playerText.html("Health Point: " + character.healthPoint +
-        " | Attack Point: " + character.currentAttackPoint +
-        " | Counter Point: " + character.counterAttackPoints);
+    playerText.html("HP: " + character.healthPoint);
 
     playerButton.append(playerImage);
     playerButton.append(playerText);
@@ -115,53 +133,3 @@ function buildButton(id, character) {
 }
 
 
-
-// *********************************************** //
-
-// *********************************************** //
-
-
-// var obiwan = {
-//     character: "Obi-Wan",
-//     healthPoint: 120,
-//     baseAttackPoint: 6,
-//     currentAttackPoint: 6,
-//     counterAttackPoints: 25,
-//     image: "../assets/images/obiwan.PNG",
-//     color: "play-button-green",
-
-// };
-
-// var luke = {
-//     characterName: "luke",
-//     healthPoint: 100,
-//     baseAttackPoint: 5,
-//     currentAttackPoint: 5,
-//     counterAttackPoints: 20,
-//     image: "../assets/images/luke.PNG",
-//     color: "play-button-green",
-// };
-
-// var sith = {
-//     characterName: "Darth Sidious",
-//     healthPoint: 150,
-//     baseAttackPoint: 8,
-//     currentAttackPoint: 8,
-//     counterAttackPoints: 25,
-//     image: "../assets/images/sith.PNG",
-//     color: "play-button-red",
-
-// };
-
-// var maul = {
-//     characterName: "Darth Maul",
-//     healthPoint: 180,
-//     baseAttackPoint: 9,
-//     currentAttackPoint: 9,
-//     counterAttackPoints: 30,
-//     image: "../assets/images/maul.PNG",
-//     color: "play-button-red",
-
-// };
-
-// /******************************/
