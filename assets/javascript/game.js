@@ -62,9 +62,10 @@ function initSetupSection2() {
 // the function called by the human and AI button selection
 function executButtonClick(buttonClicked) {
 
-
+    // the game is active
     if (isGameActive) {
 
+        // the human player is not selected, select it
         if (!isHumanPlayerSelected) {
             humanPlayer = characters[buttonClicked.id];
             console.log("Human Player is:")
@@ -77,17 +78,28 @@ function executButtonClick(buttonClicked) {
             $("#instructions-1").html("You are: " + humanPlayer.characterName);
             $("#instructions-2").html("Select who you want to fight");
 
+            $("#"+humanPlayer.id).attr("class", "play-button play-button-green")
+            
 
-
+        // the human player is selected but the AI is not.
         } else if (!isAIPlayerSelected) {
             aiPlayer = characters[buttonClicked.id];
             console.log("AI Player is:")
             console.log(aiPlayer);
             isAIPlayerSelected = true;
 
+            var numberOFEnemiesRemaining = numberOFEnemiesRemainingToFight();
+            console.log("isAnyAIRemaining: " + numberOFEnemiesRemaining);
+
             $("#section-3").html(buttonClicked);
-            $("#instructions-2").html("These are the other enemies to fight");
+            if (numberOFEnemiesRemaining > 1) {
+                $("#instructions-2").html("These are the other enemies to fight");
+            } else {
+                $("#instructions-2").html("You are close! One more to go");
+            }
             $("#instructions-3").html("You are now fighting: " + aiPlayer.characterName);
+
+            // Human and AI are selected, now we are ready to fight
             readyToFight = true;
 
 
@@ -100,10 +112,10 @@ function run() {
     initSetupSection1();
 }
 
-/* player actions */
+// fight. Human vs AI
 function fight() {
 
-    if (readyToFight) {
+    if (readyToFight && isGameActive) {
         console.log("AI Fighter");
         console.log(aiPlayer);
         console.log("Human Fighter");
@@ -122,53 +134,62 @@ function fight() {
         $("#ptext" + humanPlayer.id).html("HP: " + humanPlayer.healthPoint);
         $("#ptext" + aiPlayer.id).html("HP: " + aiPlayer.healthPoint);
 
-
+        // check if the human is still alive
         if (humanPlayer.healthPoint <= 0) {
             humanPlayer.isAlive = false;
+            gameOverMessage(humanPlayer.isAlive);
         }
 
+        // check if the AI is alive
         if (aiPlayer.healthPoint <= 0) {
 
             aiPlayer.isAlive = false;
             readyToFight = false;
             isAIPlayerSelected = false;
 
-            var msg = aiPlayer.characterName+" is dead. Select the next enemy!";    
+            // the current AI is dead, ask the user to select the next one
+            var msg = aiPlayer.characterName + " is dead. Select the next enemy!";
             $("#instructions-3").html(msg);
             $("#ptext" + aiPlayer.id).html(msg);
 
         }
     }
-}
 
-function checkIfThereAreEnemiesRemainingToFight(){
-    var enemiesRemaining =false;
-
-    for (var i=0; i<characters.length; i++){
-        if (characters[i].id != humanPlayer.id){
-            if (characters[i].isAlive){
-                enemiesRemaining = true;
-            }
-        }
+    // Check if there are any enemies left. if none, then send the win message if you are still alive
+    var numberOFEnemiesRemaining = numberOFEnemiesRemainingToFight();
+    if (numberOFEnemiesRemaining <= 0 && humanPlayer.isAlive) {
+        gameOverMessage(humanPlayer.isAlive);
     }
-
-    return enemiesRemaining;
 }
 
-function isPlayerDead(player) {
+// displays custome game over message based on win or lose
+function gameOverMessage(win) {
+    if (win) {
+        $("#instructions-1").html("You are Win!!!! May the force be with you");
+    } else {
+        $("#instructions-1").html("You are dead - Game Over");
+
+    }
+    $("#instructions-2").html("");
+    $("#instructions-3").html("");
+    $("#section-2").html("");
+    $("#section-3").html("");
+    isGameActive = false;
 
 }
 
-function attack(player1, player2) {
 
-}
 
+
+// Build the buttons
 function buildButton(id, character) {
 
+    // create the button
     var playerButton = $("<button>");
     playerButton.attr("id", id);
     playerButton.attr("class", "play-button play-button-red");
 
+    // create the image of the button
     var playerImage = $("<img>");
     playerImage.attr("src", character.image);
     playerImage.attr("alt", character.characterName);
@@ -184,6 +205,21 @@ function buildButton(id, character) {
 
     return playerButton;
 
+}
+
+// returns the number of enemies still alive.
+function numberOFEnemiesRemainingToFight() {
+    var NumOfEnemiesRemaining = 0;
+
+    for (var i = 0; i < characters.length; i++) {
+        if (characters[i].id != humanPlayer.id) {
+            if (characters[i].isAlive) {
+                NumOfEnemiesRemaining++;
+            }
+        }
+    }
+
+    return NumOfEnemiesRemaining;
 }
 
 
