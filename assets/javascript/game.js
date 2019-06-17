@@ -151,6 +151,9 @@ function fight() {
             var msg = aiPlayer.characterName + " is dead. Select the next enemy!";
             $("#instructions-3").html(msg);
             $("#ptext" + aiPlayer.id).html(msg);
+            setGameInfo(msg);
+        } else{
+            setGameInfo("");
 
         }
     }
@@ -160,6 +163,9 @@ function fight() {
     if (numberOFEnemiesRemaining <= 0 && humanPlayer.isAlive) {
         gameOverMessage(humanPlayer.isAlive);
     }
+
+
+   
 }
 
 // displays custome game over message based on win or lose
@@ -168,17 +174,26 @@ function gameOverMessage(win) {
         $("#instructions-1").html("You are Win!!!! May the force be with you");
     } else {
         $("#instructions-1").html("You are dead - Game Over");
-
     }
     $("#instructions-2").html("");
     $("#instructions-3").html("");
     $("#section-2").html("");
     $("#section-3").html("");
+    $("#game-info").html("");
+
     isGameActive = false;
 
 }
 
+function setGameInfo(specialMessage){
 
+    var msg = humanPlayer.characterName +" has "+ humanPlayer.healthPoint +" HPs ";
+    msg += "and attack point is " + humanPlayer.currentAttackPoint +" <br/>";
+    msg += aiPlayer.characterName + " has "+ aiPlayer.counterAttackPoints + " counter point <br/>";
+    msg += specialMessage;
+
+    $("#game-info").html(msg);
+}
 
 
 // Build the buttons
